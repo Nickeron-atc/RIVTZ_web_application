@@ -6,6 +6,8 @@ import MySelect from '../components/UI/select/MySelect.jsx'
 
 import TableHead from '../components/TableHead.jsx'
 import MainTable from '../components/MainTable.jsx'
+import MyModal from '../components/UI/MyModal/MyModal.jsx'
+
 
 const WorkSession = () => {
     const data = [
@@ -20,7 +22,14 @@ const WorkSession = () => {
         { id: 3, moduleName: 'Module6', MinSupportedVersion: '1.0', ActualVersion: '1.1' }
     ];
 
+    const [dataToModal, setDataToModal] = useState(0);
+    const [editedModuleName, setEditedModuleName] = useState("");
+    const [editedMinSupportedVersion, setEditedMinSupportedVersion] = useState("");
+    const [editedActualVersion, setEditedActualVersion] = useState("");
+
     const [printStatus, setPrintStatus] = useState(0);
+
+    const [modalIsVisible, setModalIsVisible] = useState(false);
 
     const setWhiteListStyle = () => {
         if (printStatus == 0)
@@ -41,19 +50,90 @@ const WorkSession = () => {
             setPrintStatus(0);
     }
 
+    /*
+    const onClickButtonEdit = (row) => {
+        console.log(row);
+
+        setDataToModal(row);
+
+        setEditedModuleName(dataToModal['moduleName']);
+        setEditedMinSupportedVersion(dataToModal['MinSupportedVersion']);
+        setEditedActualVersion(dataToModal['ActualVersion']);
+
+        set_ModalIsVisible();
+
+        console.log(dataToModal['moduleName']);
+    }*/
+
+    const onClickButtonEdit = (row) => {
+        console.log(row);
+        setDataToModal(row);
+        setEditedModuleName(row.moduleName);
+        setEditedMinSupportedVersion(row.MinSupportedVersion);
+        setEditedActualVersion(row.ActualVersion);
+        setModalIsVisible(true);
+    }
+
+    const set_ModalIsVisible = () => {
+        
+        if (modalIsVisible == true)
+            setModalIsVisible(false);
+        else
+            setModalIsVisible(true);
+        
+        return modalIsVisible;
+    }
+
+    const setDataToModal_name = (new_name) => {
+        setDataToModal()
+    }
+
     return (
         <div>
+            <MyModal 
+                className="MyModalWindowEdit" 
+                visible={modalIsVisible} 
+                setVisible={() => {set_ModalIsVisible()}}
+                >
+                <div>
+                    <h1>edit</h1>
+                    <div style={{'marginTop':'10px'}}>Name</div>
+                    <MyInput value={editedModuleName}
+                    
+                    onChange={(e) => setEditedModuleName(e.target.value)}
+                    />
+                    <div style={{'marginTop': '5px'}}>Min version</div>
+                    <MyInput value={editedModuleName}
+                    
+                    onChange={(e) => setEditedModuleName(e.target.value)}
+                    />
+                    <div style={{'marginTop':'5px'}}>Actual version</div>
+                    <MyInput value={editedModuleName}
+                    
+                    onChange={(e) => setEditedModuleName(e.target.value)}
+                    />
+
+                    <MyButton>Save</MyButton>
+                </div>
+            </MyModal>
+
+           
+
             <MyButton style={setWhiteListStyle()} onClick={swipePrintStatus}>Whitelist</MyButton>
             <MyButton style={setBlackListStyle()} onClick={swipePrintStatus}>Blacklist</MyButton>
+            <div style={{'marginTop':'10px'}}>
             {printStatus == 0 && <MainTable 
                 columns={['moduleName', 'MinSupportedVersion', 'ActualVersion']} 
                 data={data}
+                onClickButtonEdit={(button) => onClickButtonEdit(button)}
             />}
             {
                 printStatus == 1 && <MainTable 
                 columns={['moduleName', 'MinSupportedVersion', 'ActualVersion']} 
                 data={data2}
+                onClickButtonEdit={(button) => onClickButtonEdit(button)}
             />}
+            </div>
         </div>
     );
 };
