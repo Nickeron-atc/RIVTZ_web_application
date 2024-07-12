@@ -3,7 +3,7 @@ import TableHead from './TableHead';
 
 import MyButton from './UI/Button/MyButton';
 
-const MainTable = ({ columns, data }) => {
+const MainTable = ({ columns, labels, data, onClickButtonEdit, onClickButtonBlacklist }) => {
     const [filters, setFilters] = useState({});
 
     const setFilter = (column, value) => {
@@ -25,7 +25,7 @@ const MainTable = ({ columns, data }) => {
     return (
     
         <table>
-            <TableHead columns={columns} filters={filters} setFilter={setFilter} />
+            <TableHead columns={columns} filters={filters} setFilter={setFilter} labels={labels} />
             <tbody>
                 {filteredData.map(row => (
                     <tr key={row.id}>
@@ -33,8 +33,12 @@ const MainTable = ({ columns, data }) => {
                             <td key={column}>{row[column]}</td>
                         ))}
                         <td>
-                            {/* Ваши действия, такие как редактирование и т.д. */}
-                            <MyButton>Edit</MyButton>
+                            <MyButton onClick={() => onClickButtonEdit(row)}>Edit</MyButton>
+
+                            <MyButton 
+                                onClick={() => onClickButtonBlacklist(row)}
+                                style={{'marginLeft':'5px', 'background':'rgba(200, 0, 0, 0.1)'}}
+                            >Blacklist</MyButton>
                         </td>
                     </tr>
                 ))}
