@@ -1,1 +1,1 @@
-# RIVZ_web_application
+# JS_React_RIVZ_web_application
